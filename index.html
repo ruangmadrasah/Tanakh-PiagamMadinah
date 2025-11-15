@@ -1,0 +1,558 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Materi & Latihan: Tanakh & Piagam Madinah</title>
+    <!-- Memuat Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* Menggunakan font Inter dari Tailwind sebagai default */
+        html {
+            font-family: 'Inter', sans-serif;
+            scroll-behavior: smooth;
+        }
+
+        /* --- Gaya untuk Drag & Drop --- */
+
+        /* Slot pertanyaan (tempat drop) */
+        .question-slot {
+            transition: all 0.2s ease;
+            min-height: 70px; /* Memberi tinggi minimum */
+        }
+        
+        /* Item jawaban (yang di-drag) */
+        .answer-item {
+            touch-action: none; /* Penting untuk mobile */
+            transition: all 0.2s ease;
+        }
+
+        /* Saat item sedang di-drag */
+        .dragging {
+            opacity: 0.5;
+            border-style: dashed;
+            transform: scale(0.95);
+        }
+        
+        /* Saat item di-drag di atas slot yang valid */
+        .drag-over {
+            background-color: #f0f9ff; /* bg-blue-50 */
+            ring: 2px;
+            ring-color: #3b82f6; /* ring-blue-500 */
+            transform: scale(1.02);
+        }
+
+        /* Tampilan setelah dicek */
+        .correct {
+            background-color: #dcfce7; /* bg-green-100 */
+            border-left: 4px solid #22c55e; /* border-l-4 border-green-500 */
+        }
+        .incorrect {
+            background-color: #fee2e2; /* bg-red-100 */
+            border-left: 4px solid #ef4444; /* border-l-4 border-red-500 */
+        }
+        
+        /* Menyembunyikan item jawaban yang sudah dijodohkan dari kontainer asalnya */
+        .answer-item.dropped {
+            display: none;
+        }
+
+        /* Gaya untuk slot pertanyaan yang sudah terisi */
+        .question-slot.filled .slot-placeholder {
+            display: none; /* Sembunyikan placeholder saat terisi */
+        }
+        
+        .question-slot.filled .answer-item {
+            /* Pastikan item jawaban yang di-drop terlihat */
+            display: block !important; 
+            opacity: 1 !important;
+        }
+
+    </style>
+</head>
+<body class="bg-gray-100 text-gray-800 font-sans antialiased">
+
+    <!-- Kontainer Utama -->
+    <div class="min-h-screen p-6 sm:p-10">
+        
+        <!-- Judul Utama -->
+        <header class="text-center mb-10">
+            <h1 class="text-4xl md:text-5xl font-bold text-gray-900">
+                Tanakh dan Piagam Madinah
+            </h1>
+            <p class="text-lg text-gray-600 mt-4 max-w-3xl mx-auto">
+                Penjelasan singkat tentang Kitab Suci Ibrani (Tanakh) dan aturan bersama di Madinah pada zaman Nabi Muhammad SAW.
+            </p>
+        </header>
+
+        <!-- Grid untuk Konten Materi -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-6xl mx-auto">
+
+            <!-- Kolom 1: Tanakh -->
+            <article class="bg-white rounded-xl shadow-lg overflow-hidden flex flex-col">
+                <!-- Header Kartu Tanakh -->
+                <div class="p-6">
+                    <div class="flex items-center justify-center h-12 w-12 rounded-full bg-blue-100 text-blue-600">
+                        <!-- Ikon Buku -->
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-6 h-6">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M12 6.253v13.5m0-13.5A6.375 6.375 0 005.625 12.5v0c0 3.52 2.855 6.375 6.375 6.375s6.375-2.855 6.375-6.375v0A6.375 6.375 0 0012 6.253zM12 6.253V3m0 3.253A6.375 6.375 0 0118.375 12.5v0c0 3.52-2.855 6.375-6.375 6.375S5.625 16.02 5.625 12.5v0A6.375 6.375 0 0112 6.253z" />
+                        </svg>
+                    </div>
+                    <h2 class="text-3xl font-bold text-gray-900 mt-5">
+                        Tanakh (Kitab Suci Ibrani)
+                    </h2>
+                </div>
+
+                <!-- Isi Kartu Tanakh -->
+                <div class="p-6 pt-0 flex-grow">
+                    <p class="text-base text-gray-700 mb-6">
+                        <strong class="font-semibold">Tanakh</strong> adalah kumpulan kitab suci utama dalam agama Yudaisme (Yahudi). Namanya adalah singkatan dari tiga bagian utamanya:
+                    </p>
+                    <ul class="space-y-6">
+                        <!-- Bagian Torah -->
+                        <li>
+                            <strong class="font-semibold text-gray-900 text-lg">T - Torah (Taurat)</strong>
+                            <p class="text-gray-600 text-sm mb-2">Artinya "Hukum" atau "Pengajaran". Ini adalah lima kitab pertama yang diyakini ditulis oleh Musa. Isinya adalah fondasi hukum, sejarah, dan ajaran Yahudi. Kelima kitab itu adalah:</p>
+                            <ul class="list-disc list-inside space-y-1 pl-4 text-sm text-gray-500">
+                                <li><strong>Kejadian (Genesis):</strong> Cerita penciptaan dunia, Adam & Hawa, Nuh, dan bapa leluhur (Abraham, Ishak, Yakub).</li>
+                                <li><strong>Keluaran (Exodus):</strong> Kisah Musa membebaskan bangsa Israel dari perbudakan di Mesir.</li>
+                                <li><strong>Imamat (Leviticus):</strong> Berisi hukum-hukum tentang kekudusan, persembahan kurban, dan tugas para imam (pendeta Yahudi).</li>
+                                <li><strong>Bilangan (Numbers):</strong> Catatan sensus (hitungan jumlah) bangsa Israel dan kisah perjalanan mereka di padang gurun.</li>
+                                <li><strong>Ulangan (Deuteronomy):</strong> Berisi pidato Musa yang mengulangi hukum-hukum Tuhan sebelum bangsa Israel memasuki Tanah Kanaan.</li>
+                            </ul>
+                        </li>
+                        
+                        <!-- Bagian Nevi'im -->
+                        <li>
+                            <strong class="font-semibold text-gray-900 text-lg">N - Nevi'im (Nabi-nabi)</strong>
+                            <p class="text-gray-600 text-sm mb-2">Bagian yang berisi tulisan-tulisan para nabi. Terbagi jadi dua kelompok:</p>
+                            <ul class="list-disc list-inside space-y-1 pl-4 text-sm text-gray-500">
+                                <li><strong>Nabi-nabi Awal:</strong> Kitab-kitab sejarah seperti <strong>Yosua</strong> (penaklukan Kanaan), <strong>Hakim-hakim</strong> (pemimpin Israel sebelum era raja), <strong>Samuel</strong> (nabi yang melantik Raja Saul dan Daud), dan <strong>Raja-raja</strong> (sejarah kerajaan Israel).</li>
+                                <li><strong>Nabi-nabi Akhir:</strong> Kitab-kitab nubuat (ramalan/pesan Tuhan). Termasuk nabi besar seperti <strong>Yesaya</strong> (terkenal dengan ramalan Mesias), <strong>Yeremia</strong> (meratapi kejatuhan Yerusalem), dan <strong>Yehezkiel</strong> (berdakwah di pembuangan Babilonia). Ada juga <strong class="font-semibold">12 Nabi Kecil</strong> (kitab-kitab yang lebih singkat seperti Hosea, Amos, Yunus, dll).</li>
+                            </ul>
+                        </li>
+
+                        <!-- Bagian Ketuvim -->
+                        <li>
+                            <strong class="font-semibold text-gray-900 text-lg">K - Ketuvim (Tulisan)</strong>
+                            <p class="text-gray-600 text-sm mb-2">Artinya "Tulisan-tulisan". Ini adalah kumpulan tulisan berisi sastra, puisi, dan nasihat bijak. Beberapa kitab terkenalnya:</p>
+                            <ul class="list-disc list-inside space-y-1 pl-4 text-sm text-gray-500">
+                                <li><strong>Mazmur (Zabur):</strong> Kumpulan doa, nyanyian, dan pujian, banyak dikaitkan dengan Raja Daud.</li>
+                                <li><strong>Amsal:</strong> Kumpulan kata-kata bijak (nasihat), banyak dikaitkan dengan Raja Salomo.</li>
+                                <li><strong>Ayub:</strong> Kisah seorang pria saleh yang imannya diuji melalui penderitaan berat.</li>
+                                <li><strong>Kitab Rut:</strong> Kisah seorang wanita dari Moab yang setia dan menjadi nenek moyang Raja Daud.</li>
+                                <li><strong>Kitab Ester:</strong> Kisah Ratu Yahudi di Persia yang menyelamatkan bangsanya dari pemusnahan.</li>
+                                <li><strong>Kitab Daniel:</strong> Kisah nabi yang setia dan ahli menafsirkan mimpi di istana Babilonia.</li>
+                                <li><strong>Kitab Tawarikh:</strong> Catatan sejarah dan silsilah bangsa Israel.</li>
+                            </ul>
+                        </li>
+                    </ul>
+                    <p class="text-base text-gray-700 mt-6">
+                        Bagi umat Kristen, Tanakh dikenal sebagai <strong class="font-semibold">Perjanjian Lama</strong>, meskipun urutan dan daftar kitabnya mungkin sedikit berbeda di tradisi Kristen tertentu.
+                    </p>
+                </div>
+            </article>
+
+            <!-- Kolom 2: Piagam Madinah -->
+            <article class="bg-white rounded-xl shadow-lg overflow-hidden flex flex-col">
+                <!-- Header Kartu Piagam Madinah -->
+                <div class="p-6">
+                    <div class="flex items-center justify-center h-12 w-12 rounded-full bg-green-100 text-green-600">
+                        <!-- Ikon Dokumen -->
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-6 h-6">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                        </svg>
+                    </div>
+                    <h2 class="text-3xl font-bold text-gray-900 mt-5">
+                        Substansi Piagam Madinah
+                    </h2>
+                </div>
+
+                <!-- Isi Kartu Piagam Madinah -->
+                <div class="p-6 pt-0 flex-grow">
+                    <p class="text-base text-gray-700 mb-4">
+                        <strong class="font-semibold">Piagam Madinah</strong> (nama lainnya: <strong class="font-semibold">Shahifatul Madinah</strong>) adalah sebuah perjanjian resmi yang dibuat oleh Nabi Muhammad SAW sekitar tahun <strong class="font-semibold">622 M</strong>.
+                    </p>
+                    <p class="text-base text-gray-700 mb-4">
+                        Ini terjadi setelah peristiwa <strong class="font-semibold">Hijrah</strong> (pindahnya Nabi dari Mekkah) ke kota Madinah, yang dulunya bernama <strong class="font-semibold">Yatsrib</strong>. Tujuannya adalah untuk menciptakan tatanan hidup bersama yang adil dan aman bagi semua penduduk Madinah, yang terdiri dari:
+                    </p>
+                     <ul class="list-disc list-inside space-y-1 pl-4 text-sm text-gray-500 mb-6">
+                        <li>Kaum <strong class="font-semibold">Muhajirin</strong> (Muslim yang ikut pindah dari Mekkah).</li>
+                        <li>Kaum <strong class="font-semibold">Anshar</strong> (penduduk asli Madinah yang masuk Islam, berasal dari suku <strong class="font-semibold">Aus dan Khazraj</strong> yang sebelumnya sering bertikai).</li>
+                        <li><strong class="font-semibold">Kabilah-kabilah Yahudi</strong> (komunitas non-Muslim yang sudah lama tinggal di sana, seperti Bani Qaynuqa, Bani Nadhir, dan Bani Qurayzah).</li>
+                    </ul>
+
+                    <p class="text-gray-700 mb-4 font-semibold">Isi penting (substansi) dari piagam ini antara lain:</p>
+                    <ul class="space-y-4">
+                        <li>
+                            <strong class="font-semibold text-gray-900">Kesatuan Komunitas (Ummah)</strong>
+                            <p class="text-gray-600 text-sm">Menyatakan bahwa semua kelompok di atas (Muslim, Yahudi, dll) membentuk satu kelompok masyarakat atau "bangsa" (<strong class="font-semibold">ummah</strong>) yang bersatu, berbeda dari komunitas lain di luar Madinah.</p>
+                        </li>
+                        <li>
+                            <strong class="font-semibold text-gray-900">Kebebasan Beragama</strong>
+                            <p class="text-gray-600 text-sm">Memberi jaminan kebebasan beragama bagi semua kelompok. Isi perjanjian yang terkenal: "Bagi kaum Yahudi agama mereka, dan bagi kaum Muslimin agama mereka."</p>
+                        </li>
+                        <li>
+                            <strong class="font-semibold text-gray-900">Keadilan dan Hukum</strong>
+                            <p class="text-gray-600 text-sm">Menetapkan aturan hukum yang adil. Melarang pembunuhan orang beriman tanpa alasan yang jelas. Setiap kelompok bertanggung jawab atas anggotanya dan berhak mengatur <strong class="font-semibold">hukum internal kabilah</strong> mereka, namun kejahatan besar diadili bersama. Piagam ini juga mengatur soal <strong class="font-semibold">Diyat</strong> (denda atau uang tebusan darah).</p>
+                        </li>
+                        <li>
+                            <strong class="font-semibold text-gray-900">Perlindungan dan Pertahanan Bersama</strong>
+                            <p class="text-gray-600 text-sm">Semua anggota komunitas wajib saling bantu dan membela Madinah jika ada serangan dari luar. Anggota komunitas <strong class="font-semibold">dilarang membantu musuh</strong> yang menyerang Madinah. Semua anggota yang taat pada piagam mendapatkan perlindungan (<strong class="font-semibold">Dzhimmah</strong>).</p>
+                        </li>
+                        <li>
+                            <strong class="font-semibold text-gray-900">Penyelesaian Sengketa</strong>
+                            <p class="text-gray-600 text-sm">Jika terjadi masalah atau perselisihan besar antar kelompok yang tidak bisa diselesaikan, <strong class="font-semibold">Nabi Muhammad SAW</strong> diakui sebagai pemimpin tertinggi dan penengah akhir untuk menyelesaikannya secara adil.</p>
+                        </li>
+                    </ul>
+                    <p class="text-base text-gray-700 mt-6">
+                        Piagam ini dianggap sebagai salah satu contoh <strong class="font-semibold">Konstitusi Tertulis</strong> (aturan dasar negara) pertama di dunia yang berhasil membangun masyarakat yang rukun meski berbeda-beda (pluralistik) untuk menciptakan kehidupan yang <strong class="font-semibold">aman dan adil</strong>.
+                    </p>
+                </div>
+            </article>
+
+        </div>
+        <!-- Akhir Grid Konten Materi -->
+
+
+        <!-- BAGIAN LATIHAN INTERAKTIF -->
+        <section id="latihan" class="max-w-6xl mx-auto mt-16">
+            <div class="bg-white rounded-xl shadow-lg overflow-hidden">
+                <div class="p-6 sm:p-10">
+                    <h2 class="text-3xl font-bold text-gray-900 mb-4">
+                        Latihan Interaktif: Jodohkan!
+                    </h2>
+                    <p class="text-gray-600 mb-6">
+                        Ayo, uji pemahamanmu! Tarik (drag) jawaban dari kolom "Pilihan Jawaban" di sebelah kanan ke slot "Pertanyaan" yang sesuai di sebelah kiri.
+                    </p>
+                    
+                    <!-- Area Hasil -->
+                    <div id="result-message" class="mb-6 p-4 rounded-md text-lg font-semibold hidden"></div>
+
+                    <!-- Grid Latihan -->
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                        
+                        <!-- Kolom 1: Pertanyaan (Slot Drop) -->
+                        <div>
+                            <h3 class="text-xl font-semibold text-gray-800 mb-4 border-b-2 border-gray-200 pb-2">
+                                Pertanyaan
+                            </h3>
+                            <div id="question-slots-container" class="space-y-3">
+                                <!-- Slot pertanyaan akan diisi oleh JavaScript -->
+                            </div>
+                        </div>
+
+                        <!-- Kolom 2: Jawaban (Item Drag) -->
+                        <div>
+                            <h3 class="text-xl font-semibold text-gray-800 mb-4 border-b-2 border-gray-200 pb-2">
+                                Pilihan Jawaban
+                            </h3>
+                            <div id="answer-items-container" class="space-y-3 p-3 bg-gray-50 rounded-lg min-h-[300px]">
+                                <!-- Item jawaban akan diisi oleh JavaScript -->
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Tombol Aksi -->
+                    <div class="mt-8 flex flex-col sm:flex-row gap-4">
+                        <button id="check-btn" class="w-full sm:w-auto bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-lg shadow-md transition-all duration-200">
+                            Cek Jawaban
+                        </button>
+                        <button id="reset-btn" class="w-full sm:w-auto bg-gray-600 hover:bg-gray-700 text-white font-bold py-3 px-6 rounded-lg shadow-md transition-all duration-200">
+                            Reset (Soal Baru)
+                        </button>
+                    </div>
+
+                </div>
+            </div>
+        </section>
+        <!-- AKHIR BAGIAN LATIHAN -->
+
+
+        <!-- Footer -->
+        <footer class="text-center mt-12 text-gray-500 text-sm">
+            Halaman ini dibuat sebagai materi pembelajaran.
+        </footer>
+
+    </div>
+
+    <!-- Script untuk Latihan Drag & Drop -->
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+
+            // --- 1. BANK DATA SOAL (50 SOAL) ---
+            const allQuestions = [
+                // Tanakh (25) - Bahasa disederhanakan
+                { id: 1, q: "Singkatan untuk Kitab Suci Ibrani (Torah, Nevi'im, Ketuvim).", a: "Tanakh" },
+                { id: 2, q: "Lima kitab pertama Musa; artinya 'Hukum' atau 'Pengajaran'.", a: "Torah (Taurat)" },
+                { id: 3, q: "Bagian kedua Tanakh; berisi tulisan para nabi.", a: "Nevi'im (Nabi-nabi)" },
+                { id: 4, q: "Bagian ketiga Tanakh; artinya 'Tulisan' (sastra, puisi, nasihat).", a: "Ketuvim (Tulisan)" },
+                { id: 5, q: "Kitab pertama Torah; isinya cerita penciptaan.", a: "Kitab Kejadian (Genesis)" },
+                { id: 6, q: "Kitab kedua Torah; kisah Israel keluar dari Mesir.", a: "Kitab Keluaran (Exodus)" },
+                { id: 7, q: "Kitab ketiga Torah; berisi hukum kekudusan & imam.", a: "Kitab Imamat (Leviticus)" },
+                { id: 8, q: "Kitab keempat Torah; berisi hitungan jumlah bangsa Israel.", a: "Kitab Bilangan (Numbers)" },
+                { id: 9, q: "Kitab kelima Torah; isinya ulangan hukum Musa.", a: "Kitab Ulangan (Deuteronomy)" },
+                { id: 10, q: "Kitab cerita penaklukan tanah Kanaan di bawah Yosua.", a: "Kitab Yosua" },
+                { id: 11, q: "Kitab berisi kisah pemimpin Israel sebelum ada raja.", a: "Kitab Hakim-hakim" },
+                { id: 12, q: "Nabi yang melantik Saul dan Daud jadi raja.", a: "Samuel" },
+                { id: 13, q: "Kitab sejarah kerajaan Israel dan Yehuda.", a: "Kitab Raja-raja" },
+                { id: 14, q: "Nabi besar yang terkenal ramalannya tentang Mesias.", a: "Nabi Yesaya" },
+                { id: 15, q: "Nabi yang bersedih atas jatuhnya Yerusalem.", a: "Nabi Yeremia" },
+                { id: 16, q: "Nabi yang berdakwah saat di pembuangan Babilonia.", a: "Nabi Yehezkiel" },
+                { id: 17, q: "Kumpulan 12 kitab nabi-nabi singkat (Hosea, Amos, dll).", a: "12 Nabi Kecil" },
+                { id: 18, q: "Kumpulan doa & pujian, sering dikaitkan dengan Raja Daud.", a: "Kitab Mazmur (Zabur)" },
+                { id: 19, q: "Kumpulan kata bijak, sering dikaitkan dengan Raja Salomo.", a: "Kitab Amsal" },
+                { id: 20, q: "Kisah orang saleh yang diuji penderitaan berat.", a: "Kitab Ayub" },
+                { id: 21, q: "Kisah wanita Moab yang jadi nenek moyang Raja Daud.", a: "Kitab Rut" },
+                { id: 22, q: "Kisah ratu Yahudi yang selamatkan bangsanya di Persia.", a: "Kitab Ester" },
+                { id: 23, q: "Kisah nabi yang setia di istana Babilonia.", a: "Kitab Daniel" },
+                { id: 24, q: "Kitab berisi catatan silsilah & sejarah...", a: "Kitab Tawarikh" },
+                { id: 25, q: "Sebutan umat Kristen untuk Tanakh.", a: "Perjanjian Lama" },
+                
+                // Piagam Madinah (25) - Bahasa disederhanakan
+                { id: 26, q: "Nama lain untuk Piagam Madinah (Aturan Madinah).", a: "Shahifatul Madinah" },
+                { id: 27, q: "Perkiraan tahun dibuatnya Piagam Madinah.", a: "622 M" },
+                { id: 28, q: "Nama kota Madinah sebelum Nabi hijrah.", a: "Yatsrib" },
+                { id: 29, q: "Peristiwa pindahnya Nabi Muhammad dari Mekkah ke Madinah.", a: "Hijrah" },
+                { id: 30, q: "Sebutan untuk komunitas bersatu di Madinah (Muslim, Yahudi, dll).", a: "Ummah" },
+                { id: 31, q: "Jaminan untuk bebas menjalankan keyakinan.", a: "Kebebasan Beragama" },
+                { id: 32, q: "Kewajiban semua anggota 'ummah' membela kota dari serangan.", a: "Pertahanan Bersama" },
+                { id: 33, q: "Tokoh yang jadi penengah akhir jika ada sengketa.", a: "Nabi Muhammad SAW" },
+                { id: 34, q: "Kaum Muslim yang hijrah dari Mekkah ke Madinah.", a: "Muhajirin" },
+                { id: 35, q: "Penduduk asli Madinah yang menyambut kaum Muhajirin.", a: "Anshar" },
+                { id: 36, q: "Komunitas non-Muslim yang juga terikat piagam.", a: "Kabilah-kabilah Yahudi" },
+                { id: 37, q: "Denda (uang tebusan) yang diatur dalam piagam.", a: "Diyat" },
+                { id: 38, q: "Sifat Piagam Madinah yang membuatnya jadi 'pertama' di dunia.", a: "Konstitusi Tertulis" },
+                { id: 39, q: "Dua suku Arab di Madinah yang dulu sering bertikai.", a: "Aus dan Khazraj" },
+                { id: 40, q: "Perlindungan bagi anggota komunitas yang taat.", a: "Dzhimmah (Perlindungan)" },
+                { id: 41, q: "Salah satu kabilah Yahudi di Madinah (Contoh).", a: "Bani Qaynuqa" },
+                { id: 42, q: "Salah satu kabilah Yahudi di Madinah (Contoh lain).", a: "Bani Nadhir" },
+                { id: 43, q: "Salah satu kabilah Yahudi di Madinah (Contoh ketiga).", a: "Bani Qurayzah" },
+                { id: 44, q: "Prinsip utama yang ingin ditegakkan piagam.", a: "Keadilan" },
+                { id: 45, q: "Piagam ini melarang anggota komunitas membantu...", a: "Musuh yang menyerang Madinah" },
+                { id: 46, q: "Tujuan Piagam Madinah: ciptakan masyarakat yang...", a: "Aman dan adil (Pluralistik)" },
+                { id: 47, q: "Selain urusan perang dan damai, piagam juga mengatur...", a: "Hukum internal kabilah" },
+                { id: 48, q: "Seluruh anggota 'ummah' adalah satu kesatuan, terpisah dari...", a: "Komunitas (manusia) lain" },
+                { id: 49, q: "Piagam ini ajarkan solidaritas dan melarang...", a: "Membunuh orang beriman tanpa alasan" },
+                { id: 50, q: "Dokumen resmi yang berisi perjanjian.", a: "Piagam" }
+            ];
+
+            // --- 2. VARIABEL GLOBAL & REFERENSI DOM ---
+            const questionSlotsContainer = document.getElementById('question-slots-container');
+            const answerItemsContainer = document.getElementById('answer-items-container');
+            const checkBtn = document.getElementById('check-btn');
+            const resetBtn = document.getElementById('reset-btn');
+            const resultMessage = document.getElementById('result-message');
+            
+            let draggedItem = null; // Menyimpan item yang sedang di-drag
+            let currentQuestions = []; // Menyimpan 10 soal yang aktif
+
+            // --- 3. FUNGSI UTAMA ---
+
+            /**
+             * Fungsi untuk mengacak array (Fisher-Yates Shuffle)
+             * @param {Array} array - Array yang akan diacak
+             */
+            function shuffleArray(array) {
+                let currentIndex = array.length, randomIndex;
+                while (currentIndex !== 0) {
+                    randomIndex = Math.floor(Math.random() * currentIndex);
+                    currentIndex--;
+                    [array[currentIndex], array[randomIndex]] = [
+                        array[randomIndex], array[currentIndex]];
+                }
+                return array;
+            }
+
+            /**
+             * Inisialisasi atau Reset Kuis
+             */
+            function initQuiz() {
+                // Bersihkan kontainer
+                questionSlotsContainer.innerHTML = '';
+                answerItemsContainer.innerHTML = '';
+                resultMessage.innerHTML = '';
+                resultMessage.classList.add('hidden');
+                checkBtn.disabled = false;
+
+                // 1. Pilih 10 soal secara acak
+                currentQuestions = shuffleArray([...allQuestions]).slice(0, 10);
+                
+                // 2. Buat array terpisah untuk jawaban & acak jawaban
+                let answers = shuffleArray(currentQuestions.map(q => ({ id: q.id, text: q.a })));
+
+                // 3. Render Slot Pertanyaan (Drop Zones)
+                currentQuestions.forEach(q => {
+                    const slot = document.createElement('div');
+                    slot.className = 'question-slot bg-gray-100 p-4 rounded-lg flex items-center justify-between';
+                    slot.dataset.matchId = q.id; // ID yang harus dicocokkan
+                    
+                    // Teks pertanyaan
+                    const questionText = document.createElement('span');
+                    questionText.className = 'text-gray-700 text-sm';
+                    questionText.textContent = q.q;
+                    
+                    // Placeholder untuk drop
+                    const placeholder = document.createElement('span');
+                    placeholder.className = 'slot-placeholder text-gray-400 text-xs italic';
+                    placeholder.textContent = '(Tarik jawaban ke sini)';
+
+                    slot.appendChild(questionText);
+                    slot.appendChild(placeholder);
+                    
+                    questionSlotsContainer.appendChild(slot);
+                    
+                    // Tambahkan listener untuk drop
+                    addDropListeners(slot);
+                });
+
+                // 4. Render Item Jawaban (Draggable)
+                answers.forEach(a => {
+                    const item = document.createElement('div');
+                    item.className = 'answer-item bg-white p-3 rounded-lg shadow-sm border border-gray-200 cursor-move';
+                    item.dataset.matchId = a.id; // ID jawaban
+                    item.draggable = true;
+                    item.textContent = a.text;
+                    
+                    answerItemsContainer.appendChild(item);
+                    
+                    // Tambahkan listener untuk drag
+                    addDragListeners(item);
+                });
+            }
+
+            // --- 4. FUNGSI EVENT LISTENER DRAG & DROP ---
+
+            /**
+             * Tambahkan listener drag ke item jawaban
+             * @param {HTMLElement} item - Elemen yang bisa di-drag
+             */
+            function addDragListeners(item) {
+                item.addEventListener('dragstart', (e) => {
+                    draggedItem = item;
+                    e.dataTransfer.setData('text/plain', item.dataset.matchId);
+                    setTimeout(() => item.classList.add('dragging'), 0);
+                });
+
+                item.addEventListener('dragend', () => {
+                    setTimeout(() => {
+                        draggedItem.classList.remove('dragging');
+                        draggedItem = null;
+                    }, 0);
+                });
+            }
+
+            /**
+             * Tambahkan listener drop ke slot pertanyaan
+             * @param {HTMLElement} slot - Elemen tempat drop
+             */
+            function addDropListeners(slot) {
+                slot.addEventListener('dragover', (e) => {
+                    e.preventDefault(); // Wajib agar drop berfungsi
+                    slot.classList.add('drag-over');
+                });
+
+                slot.addEventListener('dragleave', () => {
+                    slot.classList.remove('drag-over');
+                });
+
+                slot.addEventListener('drop', (e) => {
+                    e.preventDefault();
+                    slot.classList.remove('drag-over');
+                    
+                    if (draggedItem) {
+                        // Jika slot sudah terisi, kembalikan item lama ke kontainer jawaban
+                        const existingItem = slot.querySelector('.answer-item');
+                        if (existingItem) {
+                            answerItemsContainer.appendChild(existingItem);
+                            existingItem.classList.remove('dropped');
+                        }
+                        
+                        // Masukkan item baru ke slot
+                        slot.appendChild(draggedItem);
+                        draggedItem.classList.add('dropped'); // Sembunyikan dari daftar asal
+                        slot.classList.add('filled'); // Tandai slot terisi
+                    }
+                });
+            }
+            
+            // Listener untuk kontainer jawaban (agar bisa mengembalikan item)
+            answerItemsContainer.addEventListener('dragover', (e) => {
+                e.preventDefault();
+                e.currentTarget.classList.add('drag-over');
+            });
+            answerItemsContainer.addEventListener('dragleave', (e) => {
+                e.currentTarget.classList.remove('drag-over');
+            });
+            answerItemsContainer.addEventListener('drop', (e) => {
+                e.preventDefault();
+                e.currentTarget.classList.remove('drag-over');
+                if (draggedItem) {
+                    answerItemsContainer.appendChild(draggedItem);
+                    draggedItem.classList.remove('dropped');
+                    // Cari slot asal jika ada, dan hapus status 'filled'
+                    const oldSlot = document.querySelector(`.question-slot .answer-item[data-match-id="${draggedItem.dataset.matchId}"]`)?.parentElement;
+                    if(oldSlot) {
+                        oldSlot.classList.remove('filled');
+                    }
+                }
+            });
+
+
+            // --- 5. FUNGSI CEK & RESET ---
+
+            /**
+             * Cek semua jawaban
+             */
+            function checkAnswers() {
+                let score = 0;
+                const total = currentQuestions.length;
+                
+                const slots = questionSlotsContainer.querySelectorAll('.question-slot');
+                
+                slots.forEach(slot => {
+                    // Hapus status sebelumnya
+                    slot.classList.remove('correct', 'incorrect');
+
+                    const questionId = slot.dataset.matchId;
+                    const answerItem = slot.querySelector('.answer-item');
+                    
+                    if (answerItem) {
+                        const answerId = answerItem.dataset.matchId;
+                        if (questionId === answerId) {
+                            slot.classList.add('correct');
+                            score++;
+                        } else {
+                            slot.classList.add('incorrect');
+                        }
+                    } else {
+                        // Tidak dijawab
+                        slot.classList.add('incorrect');
+                    }
+                });
+
+                // Tampilkan hasil
+                resultMessage.textContent = `Skor Anda: ${score} dari ${total} benar.`;
+                if(score === total) {
+                    resultMessage.className = 'mb-6 p-4 rounded-md text-lg font-semibold text-green-800 bg-green-100';
+                } else if (score > total / 2) {
+                    resultMessage.className = 'mb-6 p-4 rounded-md text-lg font-semibold text-blue-800 bg-blue-100';
+                } else {
+                    resultMessage.className = 'mb-6 p-4 rounded-md text-lg font-semibold text-red-800 bg-red-100';
+                }
+                
+                resultMessage.classList.remove('hidden');
+                checkBtn.disabled = true; // Nonaktifkan tombol cek
+            }
+
+            // --- 6. INISIALISASI ---
+            checkBtn.addEventListener('click', checkAnswers);
+            resetBtn.addEventListener('click', initQuiz);
+            
+            // Mulai kuis saat halaman dimuat
+            initQuiz();
+        });
+    </script>
+
+</body>
+</html>
